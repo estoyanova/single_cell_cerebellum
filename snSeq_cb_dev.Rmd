@@ -1,18 +1,22 @@
 ---
 title: "Seurat testing"
+author: "Elitsa Stoyanova"
 output: html_notebook
 ---
 
+```{r echo=TRUE}
+getRversion()
+```
 
 Necessary libraries
-```{r, echo = FALSE} 
+```{r echo = FALSE} 
 #source("http://bioconductor.org/biocLite.R")
 library(Seurat)
 library(tidyverse)
 ```
 
 Load Meta data as provided from authors
-```{r, echo=TRUE}
+```{r}
 sample_sheet = read.table("cerebellum_cell_metadata.tsv", sep = "\t", header = TRUE)
 ```
 
