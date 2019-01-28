@@ -5,7 +5,7 @@ output: html_notebook
 
 
 #Necessary libraries
-```{r}
+```{r, echo = FALSE} 
 source("http://bioconductor.org/biocLite.R")
 library(Seurat)
 library(tidyverse)

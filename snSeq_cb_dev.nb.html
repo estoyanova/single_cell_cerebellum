@@ -243,19 +243,11 @@ $(document).ready(function () {
 <h1>Necessary libraries</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc291cmNlKFwiaHR0cDovL2Jpb2NvbmR1Y3Rvci5vcmcvYmlvY0xpdGUuUlwiKVxubGlicmFyeShTZXVyYXQpXG5saWJyYXJ5KHRpZHl2ZXJzZSlcbmBgYCJ9 -->
-<pre class="r"><code>source(&quot;http://bioconductor.org/biocLite.R&quot;)
-library(Seurat)
-library(tidyverse)</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Load Meta data as provided from authors</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2FtcGxlX3NoZWV0ID0gcmVhZC50YWJsZShcImNlcmViZWxsdW1fY2VsbF9tZXRhZGF0YS50c3ZcIiwgc2VwID0gXCJcXHRcIiwgaGVhZGVyID0gVFJVRSlcbmBgYCJ9 -->
-<pre class="r"><code>sample_sheet = read.table(&quot;cerebellum_cell_metadata.tsv&quot;, sep = &quot;\t&quot;, header = TRUE)</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -263,17 +255,19 @@ library(tidyverse)</code></pre>
 <h1>Which timepoints have purkinje cells and how many?</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2FtcGxlX3NoZWV0ICU+JSBmaWx0ZXIoY2VsbF90eXBlPT1cIlB1cmtpbmplXCIpICU+JVxuICBncm91cF9ieShzYW1wbGVfaWQpICU+JVxuICBjb3VudCgpXG5gYGAifQ== -->
-<pre class="r"><code>sample_sheet %&gt;% filter(cell_type==&quot;Purkinje&quot;) %&gt;%
-  group_by(sample_id) %&gt;%
-  count()</code></pre>
-<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImdyb3VwZWRfZGYiLCJ0YmxfZGYiLCJ0YmwiLCJkYXRhLmZyYW1lIl0sIm5jb2wiOjIsIm5yb3ciOjEzfSwicmRmIjoiSDRzSUFBQUFBQUFBQTEyU3dWTENNQkNHMDdSVnFRS0tqdU5CNzE2b1VBcWNkZlRPZU9MbXhCSzBZMGladHFoSGJ6Nks3K09yZUtkdTJnU1dIdjVrKzJXVDd2N0o0LzAwOEtZZUlZUVMyN1VJdFNGMEtBd1djVWhEelorRTJLZGxBckdiTUNzZGdOU2kybmdJT3RLOEJXcURqa0Vub0E1STdUMnJIYm9uK0RzWG1jNjgwTlI1NlBkdVVYeTNqZnVJOXhFUEVBOFFIeUErUUR4RVBFUjhpUGdROFJIaUk4VEhpSTgzZk5MYjFnOHg0aUhpSWVKanhORTV5SWVKOG1IWFBUY1NMRFBtYlN5ZHN5aFBVb2pXK2pLYTVTb2hQNkJmMERkOFhzTjhveS9tQ25TcGRhNHZzbFA5eWk1cXAzc3psak4vbnJJRnJ4Y2pnWmxpcUlhTmpDMldnai9GTS9PS1pHMWJJMDArZkxOVlZVcS9ZQ2lLNHEvcVlDZDVQMW5tY1NJaGxhclg1TmFLczlJYWFLK2tPbnJXalY1WDhxMGI2SmVxekNESUdHd1NyWDdwbU1aZFl5dVhMN0hrcGxuQm5yblFIeTFvb2V6QVg2YXh6STFUUURNL1QzSm04cndvRVlaVXQ3UCtCMUJoS1A5M0F3QUEifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sample_id"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"E13B","2":"1"},{"1":"E14A","2":"167"},{"1":"E14B","2":"210"},{"1":"E15A","2":"135"},{"1":"E15B","2":"296"},{"1":"E16A","2":"47"},{"1":"E16B","2":"18"},{"1":"E17A","2":"29"},{"1":"E17B","2":"28"},{"1":"P00A","2":"28"},{"1":"P00B","2":"22"},{"1":"P04A","2":"11"},{"1":"P04B","2":"18"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[13]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiU2V1cmF0IHRlc3RpbmciCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCgojTmVjZXNzYXJ5IGxpYnJhcmllcwpgYGB7cn0Kc291cmNlKCJodHRwOi8vYmlvY29uZHVjdG9yLm9yZy9iaW9jTGl0ZS5SIikKbGlicmFyeShTZXVyYXQpCmxpYnJhcnkodGlkeXZlcnNlKQpgYGAKCkxvYWQgTWV0YSBkYXRhIGFzIHByb3ZpZGVkIGZyb20gYXV0aG9ycwpgYGB7cn0Kc2FtcGxlX3NoZWV0ID0gcmVhZC50YWJsZSgiY2VyZWJlbGx1bV9jZWxsX21ldGFkYXRhLnRzdiIsIHNlcCA9ICJcdCIsIGhlYWRlciA9IFRSVUUpCmBgYAoKCiMgV2hpY2ggdGltZXBvaW50cyBoYXZlIHB1cmtpbmplIGNlbGxzIGFuZCBob3cgbWFueT8KYGBge3J9CnNhbXBsZV9zaGVldCAlPiUgZmlsdGVyKGNlbGxfdHlwZT09IlB1cmtpbmplIikgJT4lCiAgZ3JvdXBfYnkoc2FtcGxlX2lkKSAlPiUKICBjb3VudCgpCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiU2V1cmF0IHRlc3RpbmciCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCgojTmVjZXNzYXJ5IGxpYnJhcmllcwpgYGB7ciwgZWNobyA9IEZBTFNFfSAKc291cmNlKCJodHRwOi8vYmlvY29uZHVjdG9yLm9yZy9iaW9jTGl0ZS5SIikKbGlicmFyeShTZXVyYXQpCmxpYnJhcnkodGlkeXZlcnNlKQpgYGAKCkxvYWQgTWV0YSBkYXRhIGFzIHByb3ZpZGVkIGZyb20gYXV0aG9ycwpgYGB7cn0Kc2FtcGxlX3NoZWV0ID0gcmVhZC50YWJsZSgiY2VyZWJlbGx1bV9jZWxsX21ldGFkYXRhLnRzdiIsIHNlcCA9ICJcdCIsIGhlYWRlciA9IFRSVUUpCmBgYAoKCiMgV2hpY2ggdGltZXBvaW50cyBoYXZlIHB1cmtpbmplIGNlbGxzIGFuZCBob3cgbWFueT8KYGBge3J9CnNhbXBsZV9zaGVldCAlPiUgZmlsdGVyKGNlbGxfdHlwZT09IlB1cmtpbmplIikgJT4lCiAgZ3JvdXBfYnkoc2FtcGxlX2lkKSAlPiUKICBjb3VudCgpCmBgYAoK</div>
 
 
 
