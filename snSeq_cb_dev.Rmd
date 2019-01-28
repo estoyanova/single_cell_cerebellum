@@ -6,7 +6,7 @@ output: html_notebook
 
 #Necessary libraries
 ```{r, echo = FALSE} 
-source("http://bioconductor.org/biocLite.R")
+#source("http://bioconductor.org/biocLite.R")
 library(Seurat)
 library(tidyverse)
 ```
