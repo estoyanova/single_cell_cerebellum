@@ -4,10 +4,6 @@ author: "Elitsa Stoyanova"
 output: html_notebook
 ---
 
-```{r echo=TRUE}
-getRversion()
-```
-
 Necessary libraries
 ```{r echo = FALSE} 
 #source("http://bioconductor.org/biocLite.R")
@@ -70,5 +66,9 @@ Violin plots of purkinje markers in author annotated purkinje cells
 ```{r}
 VlnPlot(e14a_purk, features.plot = c("Calb1", "Itpr1", "Mtss1", "Car8", "Gpr63", "Pcp2",
                                 "Grid2", "Ebf1", "Rora"))
+```
+
+```{r}
+sessionInfo()
 ```
 
