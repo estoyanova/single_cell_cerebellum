@@ -22,9 +22,12 @@ sample_sheet = read.table("cerebellum_cell_metadata.tsv", sep = "\t", header = T
 
 
 What cell types were detected?
-Which timepoints have purkinje cells and how many?
 ```{r}
 levels(sample_sheet$cell_type)
+```
+
+Which timepoints have purkinje cells and how many?
+```{r}
 sample_sheet %>% filter(cell_type=="Purkinje") %>%
   group_by(sample_id) %>%
   count()
@@ -58,10 +61,13 @@ Select purkinje cells
 e14a_purk = SubsetData(object = e14a, cells.use = e14a@meta.data$cell_type=="Purkinje")
 ```
 
-Violin plots of purkinje markers in all cells versus authors annotated purkinje cells.
+Violin plots of purkinje markers in all cells
 ```{r}
 VlnPlot(e14a, features.plot = c("Calb1", "Itpr1", "Mtss1", "Car8", "Gpr63", "Pcp2",
                                 "Grid2", "Ebf1", "Rora"))
+```
+Violin plots of purkinje markers in author annotated purkinje cells
+```{r}
 VlnPlot(e14a_purk, features.plot = c("Calb1", "Itpr1", "Mtss1", "Car8", "Gpr63", "Pcp2",
                                 "Grid2", "Ebf1", "Rora"))
 ```
