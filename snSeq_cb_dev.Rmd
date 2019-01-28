@@ -8,7 +8,19 @@ Necessary libraries
 ```{r}
 source("http://bioconductor.org/biocLite.R")
 library(Seurat)
+library(tidyverse)
+```
+
+Load Meta data as provided from authors
+```{r}
+sample_sheet = read.table("cerebellum_cell_metadata.tsv", sep = "\t", header = TRUE)
 ```
 
 
+# Which timepoints have purkinje cells and how many?
+```{r}
+sample_sheet %>% filter(cell_type=="Purkinje") %>%
+  group_by(sample_id) %>%
+  count()
+```
 
