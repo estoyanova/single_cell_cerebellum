@@ -52,7 +52,7 @@ e14a = NormalizeData(object = e14a ,
 e14a_purk = SubsetData(object = e14a, cells.use = e14a@meta.data$cell_type=="Purkinje")
 ```
 
-Violin plots of purkinje markers in all cells versus authors annotated purkinje cells.
+# Violin plots of purkinje markers in all cells versus authors annotated purkinje cells.
 ```{r}
 VlnPlot(e14a, features.plot = c("Calb1", "Itpr1", "Mtss1", "Car8", "Gpr63", "Pcp2",
                                 "Grid2", "Ebf1", "Rora"))
