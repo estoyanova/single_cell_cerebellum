@@ -1,0 +1,14 @@
+---
+title: "Seurat testing"
+output: html_notebook
+---
+
+
+Necessary libraries
+```{r}
+source("http://bioconductor.org/biocLite.R")
+library(Seurat)
+```
+
+
+
