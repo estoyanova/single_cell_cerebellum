@@ -11,8 +11,8 @@ library(Seurat)
 library(tidyverse)
 ```
 
-#Load Meta data as provided from authors
-```{r}
+Load Meta data as provided from authors
+```{r, echo=TRUE}
 sample_sheet = read.table("cerebellum_cell_metadata.tsv", sep = "\t", header = TRUE)
 ```
 
