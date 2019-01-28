@@ -4,7 +4,7 @@ output: html_notebook
 ---
 
 
-#Necessary libraries
+Necessary libraries
 ```{r, echo = FALSE} 
 #source("http://bioconductor.org/biocLite.R")
 library(Seurat)
@@ -17,16 +17,17 @@ sample_sheet = read.table("cerebellum_cell_metadata.tsv", sep = "\t", header = T
 ```
 
 
-# What cell types were detected?
-# Which timepoints have purkinje cells and how many?
+What cell types were detected?
+Which timepoints have purkinje cells and how many?
 ```{r}
 levels(sample_sheet$cell_type)
 sample_sheet %>% filter(cell_type=="Purkinje") %>%
   group_by(sample_id) %>%
   count()
 ```
-# test analysis of timepoint E14A
-# read data, create seurat subject, add timepoint specific meta data
+
+test analysis of timepoint E14A
+read data, create seurat subject, add timepoint specific meta data
 ```{r}
 e14a_data = Read10X("~/Documents/data/E14A/")
 e14a = CreateSeuratObject(raw.data = e14a_data, min.cells = 3, min.genes = 200, 
@@ -39,7 +40,7 @@ e14a = AddMetaData(object = e14a,
                    col.name = 'cell_type')
 ```
 
-# Filter and normalize data, using default params
+Filter and normalize data, using default params
 ```{r}
 e14a =  FilterCells(object = e14a, subset.names = "nGene", 
                         low.thresholds = 300, high.thresholds = 5000)
@@ -47,12 +48,13 @@ e14a = NormalizeData(object = e14a ,
                           normalization.method = "LogNormalize", 
                           scale.factor = 10000)
 ```
-# Select purkinje cells
+
+Select purkinje cells
 ```{r}
 e14a_purk = SubsetData(object = e14a, cells.use = e14a@meta.data$cell_type=="Purkinje")
 ```
 
-# Violin plots of purkinje markers in all cells versus authors annotated purkinje cells.
+Violin plots of purkinje markers in all cells versus authors annotated purkinje cells.
 ```{r}
 VlnPlot(e14a, features.plot = c("Calb1", "Itpr1", "Mtss1", "Car8", "Gpr63", "Pcp2",
                                 "Grid2", "Ebf1", "Rora"))
