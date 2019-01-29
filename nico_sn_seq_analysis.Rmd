@@ -8,9 +8,85 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
 
 ```{r}
-a = 1
-b=2
-c = 3
+# Read file as a table
+library(Seurat)
+library(dplyr)
+library(monocle)
+#Upload expression matrix and convert it into Seurat datatype
+Cerebellum = read.table("GSE97930_CerebellarHem_snDrop-seq_UMI_Count_Matrix_08-01-2017.txt.gz")
+#Cerebellum <- Read10X(data.dir = "~/Documents/scRNASEQ_data/filtered_gene_bc_matrices/hg19/")
+
+
+#colnames(fData(Cerebellum))[2] = "gene_short_name"
+#C = exportCDS(Cerebellum, "Seurat")
+# Examine the memory savings between regular and sparse matrices
+
+C= CreateSeuratObject(counts = Cerebellum, min.cells=3, min.features = 200, project = "10X_Cerebellum")
+
+# Convert into Monocle Datatype
+#D = importCDS(C)
+
+#Quality control steps: 1) Mito genes, 2) Normalization 3) Find Variable genes and scale
+C <- subset(x = C, subset = nFeature_RNA > 300 & nFeature_RNA < 5000 & percent.mito < 0.05)
+
+
+C <- NormalizeData(object = C, normalization.method = "LogNormalize", 
+                   scale.factor = 10000)
+C <- FindVariableFeatures(object = 
+                               C, selection.method = 'mean.var.plot', mean.cutoff = c(0.0125, 3), dispersion.cutoff = c(0.5, Inf))
+C <- ScaleData(object = C, features = rownames(x = C), vars.to.regress = c("nCount_RNA"))
+
+
+#Filter cells
+
+#Center data
+
+# Dimensionality Reduction: PCA - right now it chooses two PCs. It should choose more depending on the variance. Dimensions are genes.
+C <- RunPCA(object = C, features = VariableFeatures(object = C), verbose = FALSE, npcs=150)
+print(x = C[['pca']], dims = 1:5, nfeatures = 5, projected = FALSE)
+C <- ProjectDim(object =C)
+
+#Scree Plot
+
+# Heatmap of statistically important PCs
+#C <- JackStraw(object = C, num.replicate = 100, display.progress = FALSE)
+#JackStrawPlot(object = C, PCs = 1:10)
+
+# Using STDs
+ElbowPlot(object = C)
+
+#PCHeatmap(object = C, pc.use = 1:12, cells.use = 500, do.balanced = TRUE, 
+#         label.columns = FALSE, use.full = FALSE, genes.use = C@var.genes)
+
+# Graph based clustering rather than t-SNE. eg. k-NN with genes of similar expression patterns. Distances in PC space.
+
+
+C <- FindNeighbors(object = C, dims = 1:150, reduction = "pca", k.param = 50)
+           
+C <- FindClusters(object = C, resolution = 1)
+# t-SNE: check for co-localization bePtween the two methods.
+C <- RunTSNE(object = C, dims.use = 1:150)
+DimPlot(object = C, reduction = "tsne")
+
+#Finding differentially expressed genes: The min.pct argument requires a gene to be detected at a minimum percentage in either of the two groups of cells, and the thresh.test argument requires a gene to be differentially expressed (on average) by some amount between the two groups. You can set both of these to 0, but with a dramatic increase in time - since this will test a large number of genes that are unlikely to be highly discriminatory. As another option to speed up these computations, max.cells.per.ident can be set. This will downsample each identity class to have no more cells than whatever this is set to. 
+#cluster1.markers <- FindMarkers(object = C, ident.1 = 1, ident.2 = 2, min.pct = 0.25, test.use = "roc")
+#print(x = head(x = cluster1.markers, n = 5))
+
+# find markers for every cluster compared to all remaining cells, report
+# only the positive ones
+C.markers <- FindAllMarkers(object = C, only.pos = TRUE, min.pct = 0.25,
+                         thresh.use = 0.05, test.use = "negbinom", min.cells.gene = 3)
+top10 = C.markers %>% group_by(cluster) %>% top_n(20, p_val_adj)
+
+#Compare markers using violin plots
+#VlnPlot(object = C, features.plot = c("NKG7", "PF4"))
+#DoHeatmap(object = C, genes.use = top10$gene, slim.col.label = TRUE, remove.key = TRUE)
+
+
+#Assigning cell types
+#current.cluster.ids = c(0, 1, 2, 3, 4, 5, 6, 7)
+#C@ident = plyr::mapvalues(C@ident, from = current.cluster.ids, to = new.cluster.ids)
+#TSNEPlot(object = C, do.label = TRUE, pt.size = 0.5)
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
