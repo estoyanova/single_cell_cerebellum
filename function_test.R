@@ -19,6 +19,7 @@ seurat_processing = function(folder, sample_sheet) {
   seu_object = AddMetaData(object = seu_object,
                            metadata = seu_object_barcode,
                            col.name = 'cell_type')
+  seu_object = subset(x = seu_object, subset = nFeature_RNA > 300 & nFeature_RNA < 5000 & percent.mito < 0.05)
   seu_object =  FilterCells(object = seu_object, subset.names = "nGene", 
                             low.thresholds = 300, high.thresholds = 5000)
   seu_object = NormalizeData(object = seu_object , 
