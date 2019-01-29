@@ -81,6 +81,19 @@ Conver the sparse matrix to a data frame for easier manipulation (for me)
 head(e14a_purk@data)
 test = as.matrix(e14a_purk@data)
 e14a_purk_df = as.data.frame(test)
+e14a_purk_df = e14a_purk_df %>% rownames_to_column()
+```
+
+Subset the data frame based on gene list and calculate variance
+```{r}
+bp_dmv_genes_var = e14a_purk_df %>% filter(rowname %in% bp_dmv_genes$V1) %>%
+  select_if(is.numeric) %>% apply(1,var)
+
+bp_genes_var = e14a_purk_df %>% filter(rowname %in% bp_genes$V1) %>%
+  select_if(is.numeric) %>% apply(1,var)
+
+top95_genes_var = e14a_purk_df %>% filter(rowname %in% top95_genes$V1) %>%
+  select_if(is.numeric) %>% apply(1,var)
 ```
 
 
