@@ -68,6 +68,12 @@ VlnPlot(e14a_purk, features.plot = c("Calb1", "Itpr1", "Mtss1", "Car8", "Gpr63",
                                 "Grid2", "Ebf1", "Rora"))
 ```
 
+Attempt the Benayoun analysis
+```{r}
+
+```
+
+
 ```{r}
 sessionInfo()
 ```
