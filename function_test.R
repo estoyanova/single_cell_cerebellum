@@ -29,29 +29,32 @@ seurat_processing = function(folder, sample_sheet) {
                              scale.factor = 10000)
   return(seu_object)
 }
-mito.genes = grep(pattern = "^MT-", x = rownames(x= C@data), value = TRUE)
-percent.mito = Matrix::colSums(C@raw.data[mito.genes, ])/Matrix::colSums(C@raw.data)
-C = AddMetaData(object = C, metadata = percent.mito, col.name = "percent.mito")
-C = FilterCells(object = C, subset.names = c("nGene", "percent.mito"), low.thresholds = c(300, -Inf), high.thresholds = c(5000, 0.05))
 
-
-
+timepoint_variance = function(folder, sample_sheet) {
+  seu_object = seurat_processing(folder, sample_sheet)
+  
+  # select only purkinje cells
   seu_object_purk = SubsetData(object = seu_object, 
                                cells.use = seu_object@meta.data$cell_type=="Purkinje")
   seu_object_purk_df = as.matrix(seu_object_purk@data)
   seu_object_purk_df = as.data.frame(seu_object_purk_df) %>% rownames_to_column()
-  # calculate vari
-  bp_dmv_genes_var = e14a_purk_df %>% filter(rowname %in% bp_dmv_genes$V1) %>%
+  
+  # calculate variance
+  bp_dmv_genes_var = seu_object_purk_df %>% filter(rowname %in% bp_dmv_genes$V1) %>%
     select_if(is.numeric) %>% apply(1,var)
   
-  bp_genes_var = e14a_purk_df %>% filter(rowname %in% bp_genes$V1) %>%
+  bp_genes_var = seu_object_purk_df %>% filter(rowname %in% bp_genes$V1) %>%
     select_if(is.numeric) %>% apply(1,var)
   
-  top95_genes_var = e14a_purk_df %>% filter(rowname %in% top95_genes$V1) %>%
+  top95_genes_var = seu_object_purk_df %>% filter(rowname %in% top95_genes$V1) %>%
     select_if(is.numeric) %>% apply(1,var)
-  return(seu_object_purk_df)
+  return(list("bp_dmv" = bp_dmv_genes_var, 
+              "bp" = bp_genes_var, 
+              "top95" = top95_genes_var))
 }
 
-test = seurat_processing("E14B", sample_sheet)
+
+
+test = timepoint_variance("E14B", sample_sheet)
 
 
