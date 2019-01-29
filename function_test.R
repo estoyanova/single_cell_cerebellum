@@ -28,6 +28,15 @@ seurat_processing = function(folder, sample_sheet) {
                                cells.use = seu_object@meta.data$cell_type=="Purkinje")
   seu_object_purk_df = as.matrix(seu_object_purk@data)
   seu_object_purk_df = as.data.frame(seu_object_purk_df) %>% rownames_to_column()
+  # calculate vari
+  bp_dmv_genes_var = e14a_purk_df %>% filter(rowname %in% bp_dmv_genes$V1) %>%
+    select_if(is.numeric) %>% apply(1,var)
+  
+  bp_genes_var = e14a_purk_df %>% filter(rowname %in% bp_genes$V1) %>%
+    select_if(is.numeric) %>% apply(1,var)
+  
+  top95_genes_var = e14a_purk_df %>% filter(rowname %in% top95_genes$V1) %>%
+    select_if(is.numeric) %>% apply(1,var)
   return(seu_object_purk_df)
 }
 
