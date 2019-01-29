@@ -19,12 +19,23 @@ seurat_processing = function(folder, sample_sheet) {
   seu_object = AddMetaData(object = seu_object,
                            metadata = seu_object_barcode,
                            col.name = 'cell_type')
-  seu_object = subset(x = seu_object, subset = nFeature_RNA > 300 & nFeature_RNA < 5000 & percent.mito < 0.05)
-  seu_object =  FilterCells(object = seu_object, subset.names = "nGene", 
-                            low.thresholds = 300, high.thresholds = 5000)
+  mito.genes = grep(pattern = "^mt-", x = rownames(x = seu_object@data), value = TRUE)
+  percent.mito = Matrix::colSums(seu_object@raw.data[mito.genes, ])/Matrix::colSums(seu_object@raw.data)
+  seu_object = AddMetaData(object = seu_object, metadata = percent.mito, col.name = "percent.mito")
+  seu_object = FilterCells(object = seu_object, subset.names = c("nGene", "percent.mito"),
+                           low.thresholds = c(300, -Inf), high.thresholds = c(5000, 0.05))
   seu_object = NormalizeData(object = seu_object , 
                              normalization.method = "LogNormalize", 
                              scale.factor = 10000)
+  return(seu_object)
+}
+mito.genes = grep(pattern = "^MT-", x = rownames(x= C@data), value = TRUE)
+percent.mito = Matrix::colSums(C@raw.data[mito.genes, ])/Matrix::colSums(C@raw.data)
+C = AddMetaData(object = C, metadata = percent.mito, col.name = "percent.mito")
+C = FilterCells(object = C, subset.names = c("nGene", "percent.mito"), low.thresholds = c(300, -Inf), high.thresholds = c(5000, 0.05))
+
+
+
   seu_object_purk = SubsetData(object = seu_object, 
                                cells.use = seu_object@meta.data$cell_type=="Purkinje")
   seu_object_purk_df = as.matrix(seu_object_purk@data)
