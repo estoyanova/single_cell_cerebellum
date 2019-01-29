@@ -68,9 +68,19 @@ VlnPlot(e14a_purk, features.plot = c("Calb1", "Itpr1", "Mtss1", "Car8", "Gpr63",
                                 "Grid2", "Ebf1", "Rora"))
 ```
 
-Attempt the Benayoun analysis
+# Attempt the Benayoun analysis
+Read in gene lists
 ```{r}
+bp_genes = read.delim("broad_peak_anno_genes.txt", header = FALSE)
+bp_dmv_genes = read.delim("broad_peak_anno_dmv_genes.txt", header = FALSE)
+top95_genes = read.delim("top95_genes.txt", header = FALSE)
+```
 
+Conver the sparse matrix to a data frame for easier manipulation (for me)
+```{r}
+head(e14a_purk@data)
+test = as.matrix(e14a_purk@data)
+e14a_purk_df = as.data.frame(test)
 ```
 
 
