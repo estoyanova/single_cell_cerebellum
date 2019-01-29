@@ -48,13 +48,15 @@ timepoint_variance = function(folder, sample_sheet) {
   
   top95_genes_var = seu_object_purk_df %>% filter(rowname %in% top95_genes$V1) %>%
     select_if(is.numeric) %>% apply(1,var)
-  return(list("bp_dmv" = bp_dmv_genes_var, 
-              "bp" = bp_genes_var, 
-              "top95" = top95_genes_var))
+  
+  bound = bind_rows(
+    tibble(val = bp_dmv_genes_var, var = 'bp_dmv'),
+    tibble(val = bp_genes_var, var = 'bp'),
+    tibble(val = top95_genes_var, var = 'top95')) %>% add_column(timepoint = folder)
+  
+  return(bound)
 }
 
+variances = map_dfr(files, ~timepoint_variance(., sample_sheet))
 
-
-test = timepoint_variance("E14B", sample_sheet)
-
-
+ggplot(variances) + geom_boxplot(aes(var, val)) + facet_wrap(~timepoint)
