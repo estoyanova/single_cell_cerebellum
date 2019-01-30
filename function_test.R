@@ -41,13 +41,13 @@ timepoint_variance = function(folder, sample_sheet) {
   
   # calculate variance
   bp_dmv_genes_var = seu_object_purk_df %>% filter(rowname %in% bp_dmv_genes$V1) %>%
-    select_if(is.numeric) %>% apply(1,var)
+    select_if(is.numeric) %>% apply(1, cv)
   
   bp_genes_var = seu_object_purk_df %>% filter(rowname %in% bp_genes$V1) %>%
-    select_if(is.numeric) %>% apply(1,var)
+    select_if(is.numeric) %>% apply(1, cv)
   
   top95_genes_var = seu_object_purk_df %>% filter(rowname %in% top95_genes$V1) %>%
-    select_if(is.numeric) %>% apply(1,var)
+    select_if(is.numeric) %>% apply(1, cv)
   
   bound = bind_rows(
     tibble(val = bp_dmv_genes_var, var = 'bp_dmv'),
@@ -57,6 +57,15 @@ timepoint_variance = function(folder, sample_sheet) {
   return(bound)
 }
 
-variances = map_dfr(files, ~timepoint_variance(., sample_sheet))
+cv = function(x){ sd(x)/mean(x) }
 
-ggplot(variances) + geom_boxplot(aes(var, val)) + facet_wrap(~timepoint)
+means = map_dfr(files, ~timepoint_variance(., sample_sheet))
+means$timepoint = substr(means$timepoint,1,nchar(means$timepoint)-1)
+ggplot(means) + geom_boxplot(aes(var, val)) + facet_wrap(~timepoint, nrow = 1) +
+  scale_x_discrete(limits = c("bp_dmv", "bp", "top95")) + ylim(0,2)
+
+variances = map_dfr(files, ~timepoint_variance(., sample_sheet))
+variances$timepoint = substr(variances$timepoint,1,nchar(variances$timepoint)-1)
+ggplot(variances) + geom_boxplot(aes(var, val, fill = var)) + facet_wrap(~timepoint, nrow = 1) +
+  scale_x_discrete(limits = c("bp_dmv", "bp", "top95")) + ylim(0, 5)
+
