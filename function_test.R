@@ -61,11 +61,14 @@ cv = function(x){ sd(x)/mean(x) }
 
 means = map_dfr(files, ~timepoint_variance(., sample_sheet))
 means$timepoint = substr(means$timepoint,1,nchar(means$timepoint)-1)
-ggplot(means) + geom_boxplot(aes(var, val)) + facet_wrap(~timepoint, nrow = 1) +
-  scale_x_discrete(limits = c("bp_dmv", "bp", "top95")) + ylim(0,2)
+pdf("means_sn_cb.pdf", 10, 3)
+ggplot(means) + geom_boxplot(aes(var, val, fill = var, color = var), outlier.shape = NA) + facet_wrap(~timepoint, nrow = 1) +
+  scale_x_discrete(limits = c("bp_dmv", "bp", "top95")) + ylim(0,1)
+dev.off()
 
 variances = map_dfr(files, ~timepoint_variance(., sample_sheet))
 variances$timepoint = substr(variances$timepoint,1,nchar(variances$timepoint)-1)
-ggplot(variances) + geom_boxplot(aes(var, val, fill = var)) + facet_wrap(~timepoint, nrow = 1) +
+pdf("cv_sn_cb.pdf", 10, 3)
+ggplot(variances) + geom_boxplot(aes(var, val, fill = var, color = var), outlier.shape = NA) + facet_wrap(~timepoint, nrow = 1) +
   scale_x_discrete(limits = c("bp_dmv", "bp", "top95")) + ylim(0, 5)
-
+dev.off()
