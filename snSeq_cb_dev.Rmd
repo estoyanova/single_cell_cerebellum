@@ -32,10 +32,10 @@ sample_sheet %>% filter(cell_type=="Purkinje") %>%
 test analysis of timepoint E14A
 read data, create seurat subject, add timepoint specific meta data
 ```{r}
-e14a_data = Read10X("~/Documents/data/E14A/")
+e14a_data = Read10X("~/Documents/data/P04B/")
 e14a = CreateSeuratObject(raw.data = e14a_data, min.cells = 3, min.genes = 200, 
-                           project = "E14A")
-e14a_meta = sample_sheet %>% filter(sample_id=="E14A")
+                           project = "P04B")
+e14a_meta = sample_sheet %>% filter(sample_id=="P04B")
 e14a_meta_barcode = e14a_meta %>% select(cell_type)
 rownames(e14a_meta_barcode) = substr(e14a_meta[,"sample_name"], 6, 19)
 e14a = AddMetaData(object = e14a,

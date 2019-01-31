@@ -101,3 +101,5 @@ summary(variances%>% filter(var=='bp_dmv') %>% select(val))
 test = as.data.frame(variances%>% filter(var=='bp_dmv') %>% select(val))
 
 wilcox.test(test$val, mu = 1.8846)
+
+as.data.frame(means) %>% group_by(var) %>% mean()
