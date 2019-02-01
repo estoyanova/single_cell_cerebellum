@@ -167,7 +167,6 @@ Hcn1
 Hes3
 Hes7
 Hipk2
-Hist1h4m
 Hist3h2a
 Hnrnpa0
 Hnrnpa2b1

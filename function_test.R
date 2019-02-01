@@ -103,3 +103,64 @@ test = as.data.frame(variances%>% filter(var=='bp_dmv') %>% select(val))
 wilcox.test(test$val, mu = 1.8846)
 
 as.data.frame(means) %>% group_by(var) %>% mean()
+
+
+##### LOOM
+devtools::install_github(repo = "hhoeflin/hdf5r")
+devtools::install_github(repo = "mojaveazure/loomR", ref = "develop")
+library(loomR)
+
+lfile = connect(filename = "l6_r4_cerebellum_neurons.loom", mode = "r+")
+lfile
+lfile$matrix
+gene_names = lfile$row.attrs$Gene
+attrs <- c("nUMI", "nGene")
+attr.df <- lfile$get.attribute.df(MARGIN = 2, attribute.names = attrs)
+head(x = attr.df)
+
+seurat_cb = Convert.loom(from = lfile, to = "seurat")
+
+data.gene <- lfile[["matrix"]][,lfile$col.attrs$ClusterName[] == "CBPC" ]
+
+test = loom2sce('l6_r4_cerebellum_neurons.loom')
+
+loom2sce <- function(path) {
+  # Extracting the count matrix.
+  mat <- HDF5Array(path, "matrix")
+  mat <- t(mat)
+  
+  # Extracting the row and column metadata.
+  col.attrs <- h5read(path, "col_attrs")
+  if (length(col.attrs)) { 
+    col.df <- data.frame(col.attrs)
+  } else {
+    col.df <- DataFrame(matrix(0, nrow(mat), 0))
+  }
+  
+  row.attrs <- h5read(path, "row_attrs")
+  if (length(row.attrs)) { 
+    row.df <- data.frame(row.attrs)
+  } else {
+    row.df <- NULL
+  }
+  
+  # Extracting layers (if there are any)
+  optional <- h5ls(path)
+  is.layer <- optional$group=="/layer"
+  if (any(is.layer)) {
+    layer.names <- optional$name[is.layer,]
+    other.layers <- vector("list", length(layer.names))
+    names(other.layers) <- layer.names
+    
+    for (layer in layer.names) {
+      current <- HDF5Array(path, file.path("/layer", layer))
+      other.layers[[layer]] <- t(current)
+    }
+  } else {
+    other.layers <- list()
+  }
+  
+  # Returning SingleCellExperiment object.
+  sce <- SingleCellExperiment(c(matrix=mat, other.layers), rowData=row.df, colData=col.df)
+  return(sce)
+}
